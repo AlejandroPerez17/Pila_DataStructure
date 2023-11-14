@@ -1,4 +1,3 @@
-
 /**
  * Clase de un nodo en un árbol genérico.
  *
@@ -140,4 +139,3 @@ public class NodoArbol<T> {
         System.out.print(dato + "\t");
     }
 }
-
