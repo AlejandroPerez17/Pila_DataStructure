@@ -11,14 +11,16 @@ public class Arbol<T> {
    * esBinario : Indica si el árbol es binario o no.
    */
   public Arbol(T dato, boolean esBinario) {
+    // Se crea un nuevo nodo para la raíz con el dato proporcionado
     raiz = new NodoArbol<T>(dato);
+    // Se establece si el árbol es binario o no
     raiz.setEsBinario(esBinario);
     this.esBinario = esBinario;
   }
 
   /**
    * Obtiene la raíz del árbol.
-   * y retorna La raíz del árbol.
+   * @return La raíz del árbol.
    */
   public NodoArbol<T> obtenerRaiz() {
     return raiz;
@@ -26,16 +28,61 @@ public class Arbol<T> {
 
   /**
    * Verifica si el árbol es binario.
-   * returne true si es binario y false de lo contrario
+   * @return true si es binario y false de lo contrario.
    */
   public boolean esBinario() {
     return esBinario;
   }
+  
+  /**
+   * Imprime el subárbol a partir de un nodo dado.
+   * @param nodo El nodo desde el cual se imprimirá el subárbol.
+   */
+  public void imprimirSubArbol(NodoArbol<T> nodo) {
+    if (nodo != null) {
+        System.out.println("\nImprimiendo Subarbol de " + nodo.getDato() + ":");
+        System.out.println("Recorrido Prefijo: ");
+        nodo.imprimirEnPrefijo();
+        System.out.println("\nRecorrido Infijo: ");
+        nodo.imprimirEnInfijo();
+        System.out.println("\nRecorrido Posfijo: ");
+        nodo.imprimirEnPosfijo();
+    } else {
+        System.out.println("El nodo proporcionado es nulo.");
+    }
+  }
+  
+  /**
+   * Verifica si el árbol está vacío.
+   * @return true si el árbol está vacío y false de lo contrario.
+   */
+  public boolean estaVacio() {
+    return raiz == null;
+  }
+  
+  /**
+   * Obtiene la altura del árbol.
+   * @return La altura del árbol.
+   */
+  public int obtenerAltura() {
+    return obtenerAltura(raiz);
+  }
+  
+  private int obtenerAltura(NodoArbol<T> nodo) {
+    if (nodo == null) {
+        return 0;
+    } else {
+        int alturaIzquierda = obtenerAltura(nodo.obtenerPrimerHijo());
+        int alturaDerecha = obtenerAltura(nodo.obtenerSiguienteHermano());
+
+        return 1 + Math.max(alturaIzquierda, alturaDerecha);
+    }
+  }
 
   /**
    * Agrega un nodo al árbol.
-   * nodoRaiz: El nodo al que se le agregará el nuevo nodo.
-   *NodoAgregado: El nuevo nodo que se agregará al árbol.
+   * @param nodoRaiz El nodo al que se le agregará el nuevo nodo.
+   * @param nodoAgregado El nuevo nodo que se agregará al árbol.
    */
   public void agregarNodoArbol(NodoArbol<T> nodoRaiz, NodoArbol<T> nodoAgregado) {
     if (esBinario) {
@@ -47,7 +94,7 @@ public class Arbol<T> {
 
   /**
    * Imprime el árbol según el tipo de recorrido especificado.
-   * recorrido: El tipo de recorrido (Prefijo siendo 0, Infijo siendo 1, Posfijo siendo 2) que se realizará en el árbol.
+   * @param recorrido El tipo de recorrido (Prefijo siendo 0, Infijo siendo 1, Posfijo siendo 2) que se realizará en el árbol.
    */
   public void imprimirArbol(Recorrido recorrido) {
     switch (recorrido.ordinal()) {
@@ -71,4 +118,3 @@ public class Arbol<T> {
     }
   }
 }
-
