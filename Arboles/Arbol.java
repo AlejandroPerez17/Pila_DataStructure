@@ -64,19 +64,32 @@ public class Arbol<T> {
    * Obtiene la altura del árbol.
    * @return La altura del árbol.
    */
-  public int obtenerAltura() {
-    return obtenerAltura(raiz);
-  }
-  
-  private int obtenerAltura(NodoArbol<T> nodo) {
-    if (nodo == null) {
-        return 0;
-    } else {
-        int alturaIzquierda = obtenerAltura(nodo.obtenerPrimerHijo());
-        int alturaDerecha = obtenerAltura(nodo.obtenerSiguienteHermano());
+ public int alturaArbol() {
 
-        return 1 + Math.max(alturaIzquierda, alturaDerecha);
+    return calcularAltura(raiz);
+
+  }
+
+  /**
+   * Método para calcular la altura del árbol desde un nodo dado
+   *
+   * @param nodo El nodo a partir del cual se calculará la altura
+   * @return La altura del árbol a partir del nodo dado
+   */
+  private int calcularAltura(NodoArbol<T> nodo) {
+    if (nodo == null) {
+      return 0;
+    } else {
+      NodoArbol<T> hijo = nodo.obtenerPrimerHijo();
+      int alturaMaxima = 0;
+      while (hijo != null) {
+        int alturaHijo = calcularAltura(hijo);
+        alturaMaxima = Math.max(alturaMaxima, alturaHijo);
+        hijo = hijo.obtenerSiguienteHermano();
+      }
+      return alturaMaxima + 1;
     }
+
   }
 
   /**
