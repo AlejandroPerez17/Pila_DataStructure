@@ -127,13 +127,13 @@ public class Main {
         System.out.println("\nRecorrido Posfijo: ");
         arbolbi.imprimirArbol(Recorrido.POSFIJO);      
                 
-        //manda a llamar el metodo esta vacio para verificar si lo esta o no y lo imprime en consola
+        
         System.out.println("\nEl arbol binario esta vacio: " + arbolbi.estaVacio());
 
         // Obtener la altura del árbol binario
-        System.out.println("Altura del arbol binario: " + arbolbi.obtenerAltura());
+        System.out.println("Altura del arbol binario: " + arbolbi.alturaArbol());
 
-        //espacios para estetica jeje
+        
         System.out.println("-----------------------------------------------------");
         System.out.println("");
         // Imprimir subárbol a partir del nodo 'B'
@@ -142,4 +142,3 @@ public class Main {
        
     }
 }
-
