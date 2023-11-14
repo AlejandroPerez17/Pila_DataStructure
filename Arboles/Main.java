@@ -2,8 +2,8 @@ public class Main {
     public static void main(String[] args) {
         // Crear un árbol no binario de tipo String
         Arbol<String> arbol = new Arbol<>("A", false);
-
-        // CREACION DE NUESTROS NODOS 
+        
+        // CREACION DE NUESTROS NODOS no binario
         NodoArbol<String> nodoB = new NodoArbol<>("B");
         NodoArbol<String> nodoC = new NodoArbol<>("C");
         NodoArbol<String> nodoD = new NodoArbol<>("D");
@@ -21,7 +21,7 @@ public class Main {
         NodoArbol<String> nodoP = new NodoArbol<>("P");
         NodoArbol<String> nodoQ = new NodoArbol<>("Q");
 
-        //INICIALIZAMOS LOS 3 NODOS HIJOS DE NUESTRA RAIZ PRINICIPAL A
+       //INICIALIZAMOS LOS 3 NODOS HIJOS DE NUESTRA RAIZ PRINICIPAL A
        arbol.agregarNodoArbol(arbol.obtenerRaiz(), nodoB);
        arbol.agregarNodoArbol(arbol.obtenerRaiz(), nodoC);
        arbol.agregarNodoArbol(arbol.obtenerRaiz(), nodoD);
@@ -55,6 +55,8 @@ public class Main {
      
         
     // Imprimir el árbol en diferentes recorridos
+    
+        System.out.println("\n ARBOL NO BINARIO");
         System.out.println("Recorrido Prefijo: ");
         arbol.imprimirArbol(Recorrido.PREFIJO);
   
@@ -63,6 +65,79 @@ public class Main {
         
         System.out.println("\nRecorrido Posfijo: ");
         arbol.imprimirArbol(Recorrido.POSFIJO);
+                
+        
+        
+        
+        System.out.println("\n------------------------------------------------------");
+        System.out.println("\n");
+        
+        System.out.println("ARBOL BINARIO");
+          // CREACION DE NUESTROS NODOS no binario       
+        Arbol<String> arbolbi = new Arbol<>("A", true);
+        
+        
+        NodoArbol<String> nodoBbin = new NodoArbol<>("B");
+        NodoArbol<String> nodoCbin = new NodoArbol<>("C");
+        NodoArbol<String> nodoDbin = new NodoArbol<>("D");
+        NodoArbol<String> nodoEbin = new NodoArbol<>("E");
+        NodoArbol<String> nodoFbin = new NodoArbol<>("F");
+        NodoArbol<String> nodoGbin = new NodoArbol<>("G");
+        NodoArbol<String> nodoHbin = new NodoArbol<>("H");
+        NodoArbol<String> nodoIbin = new NodoArbol<>("I");
+        NodoArbol<String> nodoJbin = new NodoArbol<>("J");
+        NodoArbol<String> nodoKbin = new NodoArbol<>("K");
+        NodoArbol<String> nodoLbin = new NodoArbol<>("L");
+        NodoArbol<String> nodoMbin = new NodoArbol<>("M");
+        NodoArbol<String> nodoNbin = new NodoArbol<>("N");
+        NodoArbol<String> nodoObin = new NodoArbol<>("O");
+        NodoArbol<String> nodoPbin = new NodoArbol<>("P");
+        NodoArbol<String> nodoQbin = new NodoArbol<>("Q");
+    
+       arbolbi.agregarNodoArbol(arbolbi.obtenerRaiz(), nodoBbin);
+       
+         arbolbi.agregarNodoArbol(nodoBbin, nodoEbin);
+        arbolbi.agregarNodoArbol(nodoBbin, nodoCbin);
+
+        arbolbi.agregarNodoArbol(nodoEbin, nodoFbin);
+        arbolbi.agregarNodoArbol(nodoFbin, nodoJbin);
+        arbolbi.agregarNodoArbol(nodoJbin, nodoKbin);
+        arbolbi.agregarNodoArbol(nodoKbin, nodoLbin);
+
+        arbolbi.agregarNodoArbol(nodoCbin, nodoDbin);
+        arbolbi.agregarNodoArbol(nodoDbin, nodoGbin);
+        
+        arbolbi.agregarNodoArbol(nodoGbin, nodoMbin);
+        arbolbi.agregarNodoArbol(nodoGbin, nodoHbin);
+        
+        arbolbi.agregarNodoArbol(nodoMbin, nodoPbin);
+        arbolbi.agregarNodoArbol(nodoPbin, nodoQbin);
+        
+        arbolbi.agregarNodoArbol(nodoHbin, nodoIbin);
+        arbolbi.agregarNodoArbol(nodoIbin, nodoNbin);
+        arbolbi.agregarNodoArbol(nodoNbin, nodoObin);
+
+          // Imprimir el árbol en diferentes recorridos
+        System.out.println("\nRecorrido Prefijo: ");
+        arbolbi.imprimirArbol(Recorrido.PREFIJO);
+  
+        System.out.println("\nRecorrido Infijo: ");
+        arbolbi.imprimirArbol(Recorrido.INFIJO);
+        
+        System.out.println("\nRecorrido Posfijo: ");
+        arbolbi.imprimirArbol(Recorrido.POSFIJO);      
+                
+        //manda a llamar el metodo esta vacio para verificar si lo esta o no y lo imprime en consola
+        System.out.println("\nEl arbol binario esta vacio: " + arbolbi.estaVacio());
+
+        // Obtener la altura del árbol binario
+        System.out.println("Altura del arbol binario: " + arbolbi.obtenerAltura());
+
+        //espacios para estetica jeje
+        System.out.println("-----------------------------------------------------");
+        System.out.println("");
+        // Imprimir subárbol a partir del nodo 'B'
+        arbolbi.imprimirSubArbol(nodoBbin);
         
        
     }
