@@ -1,4 +1,4 @@
-/**
+/** 
  * Clase ArbolB que representa un árbol B.
  * 
  * Campos:
