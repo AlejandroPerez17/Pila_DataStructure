@@ -1,46 +1,37 @@
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
-        Scanner leer = new Scanner(System.in);
+        ArbolB Arbolitobb = new ArbolB(3); // t = orden 3 del arbol 
 
-        // Crear un árbol B con un orden de 3
+        // Insertar valores en el árbol
+        Arbolitobb.insertar(10);
+        Arbolitobb.insertar(20);
+        Arbolitobb.insertar(5);
+        Arbolitobb.insertar(6);
+        Arbolitobb.insertar(12);
+         Arbolitobb.insertar(105);
+        Arbolitobb.insertar(290);
+        Arbolitobb.insertar(57);
+        Arbolitobb.insertar(61);
+        Arbolitobb.insertar(123);
+
+        // Buscar un nodo en el árbol
+        Arbolitobb.buscar(6);
+
+        // Eliminar un nodo del árbol
+        Arbolitobb.eliminar(12);
+
+        // Imprimir el árbol para verificar su estado
+      Arbolitobb.imprimirArbol();
+      
+      //nuevos valores
+       Arbolitobb.insertar(15);
+        Arbolitobb.insertar(22);
+        Arbolitobb.insertar(50);
+        Arbolitobb.insertar(64);
+        Arbolitobb.insertar(120);
         
+        //nueva impresion
+        Arbolitobb.imprimirArbol();
 
-        // Insertar algunas llaves
-        System.out.println("Cuantos datos quieres insertar?");
-        int cantidadLlaves = leer.nextInt();
-        ArbolB arbolB = new ArbolB(4);
-        for (int i = 0; i < cantidadLlaves; i++) {
-            System.out.println("Ingrese los datos " + i + ":");
-            int llave = leer.nextInt();
-            arbolB.insertar(arbolB, llave);
-        }
-
-        // Imprimir el árbol después de las inserciones
-        System.out.println("arbol B despues de inserciones:");
-        arbolB.imprimir(arbolB.raiz);
-        System.out.println();
-
-        // Buscar un nodo específico
-        System.out.println("Buscar nodo con dato:");
-        int llaveBuscar = leer.nextInt();
-        arbolB.imprimirNodoEspecifico(arbolB, llaveBuscar);
-        System.out.println();
-
-        // Eliminar una llave
-        System.out.println("Arbol B antes de eliminar el Dato:");
-        arbolB.imprimir(arbolB.raiz);
-        System.out.println();
-        System.out.println("Ingrese el dato que deseas eliminar:");
-        int llaveEliminar = leer.nextInt();
-        arbolB.eliminarLlave(arbolB, llaveEliminar);
-        System.out.println("Arbol B despues de eliminar el dato:");
-        arbolB.imprimir(arbolB.raiz);
-        System.out.println();
-        
-        System.out.println("");
-        
-        
     }
 }
