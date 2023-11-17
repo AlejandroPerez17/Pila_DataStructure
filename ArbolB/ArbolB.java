@@ -24,69 +24,69 @@ public class ArbolB {
     }
 
     // Método auxiliar para la inserción cuando el nodo no está lleno
-    private void insertarNoLleno(NodoB nodo, int clave) {
-        int i = nodo.n - 1;
+   private void insertarNoLleno(NodoB nodo, int clave) {
+    int i = nodo.n - 1;
 
-        // Si el nodo es una hoja, se inserta la clave en la posición adecuada
-        if (nodo.hoja) {
-            while (i >= 0 && clave < nodo.claves[i]) {
-                nodo.claves[i + 1] = nodo.claves[i];
-                i--;
-            }
-            nodo.claves[i + 1] = clave;
-            nodo.n++;
-        } else {
-            // Si el nodo no es una hoja, se desciende al hijo adecuado
-            while (i >= 0 && clave < nodo.claves[i]) {
-                i--;
-            }
-
-            i++;
-            // Si el hijo está lleno, se realiza la división antes de descender
-            if (nodo.hijos[i] != null && nodo.hijos[i].n == 2 * t - 1) {
-                dividirHijo(nodo, i);
-                if (clave > nodo.claves[i]) {
-                    i++;
-                }
-            }
-
-            // Si el hijo no existe, se crea antes de descender
-            if (nodo.hijos[i] == null) {
-                nodo.hijos[i] = new NodoB(t, true);
-            }
-
-            insertarNoLleno(nodo.hijos[i], clave);
+    if (nodo.hoja) {
+        while (i >= 0 && clave < nodo.claves[i]) {
+            nodo.claves[i + 1] = nodo.claves[i];
+            i--;
         }
+        nodo.claves[i + 1] = clave;
+        nodo.n++;
+    } else {
+        while (i >= 0 && clave < nodo.claves[i]) {
+            i--;
+        }
+
+        i++;
+        if (nodo.hijos[i] != null && nodo.hijos[i].n == 2 * t - 1) {
+            dividirHijo(nodo, i);
+            if (clave > nodo.claves[i]) {
+                i++;
+            }
+        }
+
+        if (nodo.hijos[i] == null) {
+            nodo.hijos[i] = new NodoB(t, true); // Asegurar que haya un nodo hijo antes de insertar
+        }
+
+        insertarNoLleno(nodo.hijos[i], clave);
     }
+}
 
     // Método para buscar una clave en el Árbol B
     public void buscar(int clave) {
-        if (buscarClave(raiz, clave)) {
-            System.out.println("El nodo con la clave " + clave + " se encuentra en el Arbol-B.");
-        } else {
-            System.out.println("El nodo con la clave " + clave + " no se encuentra en el Arbol-B.");
-        }
+    if (buscarClave(raiz, clave)) {
+        System.out.println("");
+    } else {
+        System.out.println("");
     }
+}
 
     // Método auxiliar para la búsqueda de clave de manera recursiva
-    private boolean buscarClave(NodoB nodo, int clave) {
-        int i = 0;
-        while (i < nodo.n && clave > nodo.claves[i]) {
-            i++;
-        }
+  private boolean buscarClave(NodoB nodo, int clave) {
+    int i = 0;
+    while (i < nodo.n && clave > nodo.claves[i]) {
+        i++;
+    }
 
-        if (i < nodo.n && clave == nodo.claves[i]) {
-            return true;
-        }
+    if (i < nodo.n && clave == nodo.claves[i]) {
+        System.out.println("El nodo con la clave " + clave + " se encuentra en el Arbol-B.");
+        return true;
+    }
 
-        // Si es una hoja y no se encontró la clave, se retorna falso
-        if (nodo.hoja) {
-            return false;
-        }
+    if (nodo.hoja) {
+        System.out.println("El nodo con la clave " + clave + " no se encuentra en el Arbol-B.");
+        return false;
+    }
 
-        // Se desciende al hijo correspondiente
+    if (i == nodo.n) {
+        return buscarClave(nodo.hijos[i - 1], clave);
+    } else {
         return buscarClave(nodo.hijos[i], clave);
     }
+}
 
     // Método para eliminar una clave en el Árbol B
     public void eliminar(int clave) {
@@ -104,36 +104,36 @@ public class ArbolB {
 
     // Método auxiliar para eliminar una clave de manera recursiva
     private void eliminarClave(NodoB nodo, int clave) {
-        int i = 0;
-        while (i < nodo.n && clave > nodo.claves[i]) {
-            i++;
+    int i = 0;
+    while (i < nodo.n && clave > nodo.claves[i]) {
+        i++;
+    }
+
+    // Si el nodo es una hoja, se elimina la clave de la hoja
+    if (nodo.hoja) {
+        if (i < nodo.n && clave == nodo.claves[i]) {
+            eliminarDeHoja(nodo, i);
         }
-
-        // Si el nodo es una hoja, se elimina la clave de la hoja
-        if (nodo.hoja) {
-            if (i < nodo.n && clave == nodo.claves[i]) {
-                eliminarDeHoja(nodo, i);
-            }
+    } else {
+        // Si el nodo no es una hoja, se elimina de un nodo no hoja
+        if (i < nodo.n && clave == nodo.claves[i]) {
+            eliminarDeNoHoja(nodo, i);
         } else {
-            // Si el nodo no es una hoja, se elimina de un nodo no hoja
-            if (i < nodo.n && clave == nodo.claves[i]) {
-                eliminarDeNoHoja(nodo, i);
+            // Manejo de casos especiales y recursión para descender al hijo adecuado
+            boolean flag = (i == nodo.n);
+
+            if (nodo.hijos[i] != null && nodo.hijos[i].n < t) {
+                llenar(nodo, i);
+            }
+
+            if (flag && i > nodo.n) {
+                eliminarClave(nodo.hijos[i - 1], clave);
             } else {
-                // Manejo de casos especiales y recursión para descender al hijo adecuado
-                boolean flag = (i == nodo.n);
-
-                if (nodo.hijos[i] != null && nodo.hijos[i].n < t) {
-                    llenar(nodo, i);
-                }
-
-                if (flag && i > nodo.n) {
-                    eliminarClave(nodo.hijos[i - 1], clave);
-                } else {
-                    eliminarClave(nodo.hijos[i], clave);
-                }
+                eliminarClave(nodo.hijos[i], clave);
             }
         }
     }
+}
 
     // Método auxiliar para eliminar una clave de un nodo hoja
     private void eliminarDeHoja(NodoB nodo, int idx) {
@@ -354,4 +354,3 @@ public void imprimirArbol() {
     imprimirArbol(raiz, 0);
 }
 }
-
