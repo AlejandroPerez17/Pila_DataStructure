@@ -21,3 +21,4 @@ public class NodoB {
         this.n = 0;                        // Inicialmente, el nodo no tiene claves
     }
 }
+ 
