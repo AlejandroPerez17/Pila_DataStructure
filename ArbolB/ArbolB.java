@@ -1,184 +1,357 @@
-/** 
- * Clase ArbolB que representa un árbol B.
- * 
- * Campos:
- * - orden: Almacena el orden del árbol.
- * - raiz: Representa la raíz del árbol.
- * 
- * Constructores:
- * - public ArbolB(int orden): Constructor que recibe el orden del árbol
- *   e inicializa la raíz con un nuevo nodo.
- * 
- * Métodos:
- * - public NodoB buscar(NodoB raiz, int dato): Busca un dato en el árbol y muestra un mensaje
- *   indicando si se encontró o no.
- * - public void dividir(NodoB x, int i, NodoB y): Divide un nodo durante la inserción si está lleno.
- * - public void insercionNoLlena(NodoB x, int dato): Realiza la inserción de un dato en un nodo no lleno.
- * - public void insertar(ArbolB t, int dato): Inserta un dato en el árbol B.
- * - public void imprimir(NodoB n): Imprime los datos del árbol de manera ordenada.
- * - public void imprimirNodoEspecifico(ArbolB T, int x): Imprime un nodo específico del árbol.
- * - public void eliminarLlave(ArbolB t, int llave): Elimina un dato del árbol B si existe.
- */
-
-
 public class ArbolB {
-    
-    int orden; // orden del árbol
-    NodoB raiz; // raíz del árbol
+    private NodoB raiz;
+    private int t;
 
-    public ArbolB(int orden) {
-        this.orden = orden;
-        raiz = new NodoB(orden, null);
+    // Constructor del Árbol B
+    public ArbolB(int t) {
+        this.raiz = new NodoB(t, true);
+        this.t = t;
     }
 
-   public NodoB buscar(NodoB raiz, int dato) {
-    int i = 0; // índice de búsqueda
-
-    while (i < raiz.getCantidad() && dato > raiz.getDato(i)) {
-        i++;
-    }
-    
-    if (i <= raiz.getCantidad() && dato == raiz.getDato(i)) {
-        System.out.println("Se encontro el dato " + dato + " en el arbol B.");
-        return raiz;
-    }
-    
-    if (raiz.esHoja()) {
-        System.out.println("No se encontro el dato " + dato + " en el arbol B.");
-        return null;
-    } else {
-        return buscar(raiz.getHijo(i), dato);
-    }
-}
-
-  public void dividir(NodoB x, int i, NodoB y) {
-    NodoB z = new NodoB(orden, null);
-
-    z.setHoja(y.esHoja());
-    z.setCantidad(orden - 1);
-
-    for (int j = 0; j < orden - 1; j++) {
-        z.setDato(j, y.getDato(j + orden));
-    }
-    if (!y.esHoja()) {
-        for (int k = 0; k < orden; k++) {
-            z.setHijo(k, y.getHijo(k + orden));
+    // Método para insertar una clave en el Árbol B
+    public void insertar(int clave) {
+        // Si la raíz está llena, se crea una nueva raíz y se realiza la división
+        if (raiz.n == 2 * t - 1) {
+            NodoB nuevaRaiz = new NodoB(t, false);
+            nuevaRaiz.hijos[0] = raiz;
+            dividirHijo(nuevaRaiz, 0);
+            insertarNoLleno(nuevaRaiz, clave);
+            raiz = nuevaRaiz;
+        } else {
+            // Si la raíz no está llena, se inserta directamente
+            insertarNoLleno(raiz, clave);
         }
     }
 
-    // Inicializar los arrays del nuevo nodo (z)
-    z.datos[orden - 1] = 0;
-    z.hijos[orden] = null;
+    // Método auxiliar para la inserción cuando el nodo no está lleno
+    private void insertarNoLleno(NodoB nodo, int clave) {
+        int i = nodo.n - 1;
 
-    y.setCantidad(orden - 1);
+        // Si el nodo es una hoja, se inserta la clave en la posición adecuada
+        if (nodo.hoja) {
+            while (i >= 0 && clave < nodo.claves[i]) {
+                nodo.claves[i + 1] = nodo.claves[i];
+                i--;
+            }
+            nodo.claves[i + 1] = clave;
+            nodo.n++;
+        } else {
+            // Si el nodo no es una hoja, se desciende al hijo adecuado
+            while (i >= 0 && clave < nodo.claves[i]) {
+                i--;
+            }
 
-    for (int j = x.getCantidad(); j > i; j--) {
-        x.setHijo(j + 1, x.getHijo(j));
+            i++;
+            // Si el hijo está lleno, se realiza la división antes de descender
+            if (nodo.hijos[i] != null && nodo.hijos[i].n == 2 * t - 1) {
+                dividirHijo(nodo, i);
+                if (clave > nodo.claves[i]) {
+                    i++;
+                }
+            }
+
+            // Si el hijo no existe, se crea antes de descender
+            if (nodo.hijos[i] == null) {
+                nodo.hijos[i] = new NodoB(t, true);
+            }
+
+            insertarNoLleno(nodo.hijos[i], clave);
+        }
     }
-    x.setHijo(i + 1, z);
 
-    for (int j = x.getCantidad(); j > i; j--) {
-        x.setDato(j + 1, x.getDato(j));
+    // Método para buscar una clave en el Árbol B
+    public void buscar(int clave) {
+        if (buscarClave(raiz, clave)) {
+            System.out.println("El nodo con la clave " + clave + " se encuentra en el Arbol-B.");
+        } else {
+            System.out.println("El nodo con la clave " + clave + " no se encuentra en el Arbol-B.");
+        }
     }
-    x.setDato(i, y.getDato(orden - 1));
 
-    y.setDato(orden - 1, 0);
-
-    for (int j = 0; j < orden - 1; j++) {
-        y.setDato(j + orden, 0);
-    }
-    x.setCantidad(x.getCantidad() + 1);
-}
-   
-   public void insercionNoLlena(NodoB x, int dato) {
-    int i = x.getCantidad();
-
-    if (x.esHoja()) {
-        while (i >= 1 && dato < x.getDato(i - 1)) {
-            x.setDato(i, x.getDato(i - 1));
-            i--;
+    // Método auxiliar para la búsqueda de clave de manera recursiva
+    private boolean buscarClave(NodoB nodo, int clave) {
+        int i = 0;
+        while (i < nodo.n && clave > nodo.claves[i]) {
+            i++;
         }
 
-        x.setDato(i, dato);
-        x.setCantidad(x.getCantidad() + 1);
-    } else {
-        int j = 0;
-        while (j < x.getCantidad() && dato > x.getDato(j)) {
-            j++;
+        if (i < nodo.n && clave == nodo.claves[i]) {
+            return true;
         }
 
-        if (x.getHijo(j).getCantidad() == 2 * orden - 1) {
-            dividir(x, j, x.getHijo(j));
+        // Si es una hoja y no se encontró la clave, se retorna falso
+        if (nodo.hoja) {
+            return false;
+        }
 
-            if (dato > x.getDato(j)) {
-                j++;
+        // Se desciende al hijo correspondiente
+        return buscarClave(nodo.hijos[i], clave);
+    }
+
+    // Método para eliminar una clave en el Árbol B
+    public void eliminar(int clave) {
+        eliminarClave(raiz, clave);
+
+        // Si la raíz queda vacía después de la eliminación, se ajusta la raíz
+        if (raiz.n == 0) {
+            if (raiz.hoja) {
+                raiz = null;
+            } else {
+                raiz = raiz.hijos[0];
             }
         }
-
-        insercionNoLlena(x.getHijo(j), dato);
     }
-}
-    public void insertar(ArbolB t, int dato) {
-        NodoB r = t.raiz;
-        if (r.getCantidad() == 2 * orden - 1) {
-            NodoB s = new NodoB(orden, null);
-            t.raiz = s;
-            s.setHoja(false);
-            s.setCantidad(0);
-            s.setHijo(0, r);
-            dividir(s, 0, r);
-            insercionNoLlena(s, dato);
-        } else {
-            insercionNoLlena(r, dato);
+
+    // Método auxiliar para eliminar una clave de manera recursiva
+    private void eliminarClave(NodoB nodo, int clave) {
+        int i = 0;
+        while (i < nodo.n && clave > nodo.claves[i]) {
+            i++;
         }
-    }
 
-   public void imprimir(NodoB n) {
-    for (int i = 0; i < n.getCantidad(); i++) {
-        System.out.print(n.getDato(i) + " ");
-    }
+        // Si el nodo es una hoja, se elimina la clave de la hoja
+        if (nodo.hoja) {
+            if (i < nodo.n && clave == nodo.claves[i]) {
+                eliminarDeHoja(nodo, i);
+            }
+        } else {
+            // Si el nodo no es una hoja, se elimina de un nodo no hoja
+            if (i < nodo.n && clave == nodo.claves[i]) {
+                eliminarDeNoHoja(nodo, i);
+            } else {
+                // Manejo de casos especiales y recursión para descender al hijo adecuado
+                boolean flag = (i == nodo.n);
 
-    if (!n.esHoja()) {
-        for (int j = 0; j <= n.getCantidad(); j++) {
-            if (n.getHijo(j) != null) {
-                System.out.println();
-                imprimir(n.getHijo(j));
-                if (j < n.getCantidad()) {
-                    System.out.print(n.getDato(j) + " ");
+                if (nodo.hijos[i] != null && nodo.hijos[i].n < t) {
+                    llenar(nodo, i);
+                }
+
+                if (flag && i > nodo.n) {
+                    eliminarClave(nodo.hijos[i - 1], clave);
+                } else {
+                    eliminarClave(nodo.hijos[i], clave);
                 }
             }
         }
     }
+
+    // Método auxiliar para eliminar una clave de un nodo hoja
+    private void eliminarDeHoja(NodoB nodo, int idx) {
+        for (int i = idx + 1; i < nodo.n; ++i) {
+            nodo.claves[i - 1] = nodo.claves[i];
+        }
+        nodo.n--;
+    }
+
+    // Método auxiliar para eliminar una clave de un nodo no hoja
+    private void eliminarDeNoHoja(NodoB nodo, int idx) {
+        int clave = nodo.claves[idx];
+
+        // Se obtiene el predecesor o sucesor según sea necesario
+        if (nodo.hijos[idx] != null && nodo.hijos[idx].n >= t) {
+            int predecesor = obtenerPredecesor(nodo, idx);
+            nodo.claves[idx] = predecesor;
+            eliminarClave(nodo.hijos[idx], predecesor);
+        } else if (nodo.hijos[idx + 1] != null && nodo.hijos[idx + 1].n >= t) {
+            int sucesor = obtenerSucesor(nodo, idx);
+            nodo.claves[idx] = sucesor;
+            eliminarClave(nodo.hijos[idx + 1], sucesor);
+        } else {
+            // En caso de que no haya predecesor ni sucesor suficiente, se fusiona
+            fusionar(nodo, idx);
+            eliminarClave(nodo.hijos[idx], clave);
+        }
+    }
+
+    // Método auxiliar para obtener el predecesor de una clave en un nodo
+    private int obtenerPredecesor(NodoB nodo, int idx) {
+        NodoB actual = nodo.hijos[idx];
+        while (!actual.hoja) {
+            actual = actual.hijos[actual.n];
+        }
+        return actual.claves[actual.n - 1];
+    }
+
+    // Método auxiliar para obtener el sucesor de una clave en un nodo
+    private int obtenerSucesor(NodoB nodo, int idx) {
+        NodoB actual = nodo.hijos[idx + 1];
+        while (!actual.hoja) {
+            actual = actual.hijos[0];
+        }
+        return actual.claves[0];
+    }
+
+ // Método auxiliar para llenar un nodo que tiene menos claves que el mínimo
+private void llenar(NodoB nodo, int idx) {
+    if (idx != 0 && nodo.hijos[idx - 1] != null && nodo.hijos[idx - 1].n >= t) {
+        tomarDeAnterior(nodo, idx);
+    } else if (idx != nodo.n && nodo.hijos[idx + 1] != null && nodo.hijos[idx + 1].n >= t) {
+        tomarDeSiguiente(nodo, idx);
+    } else {
+        // En caso de que no se pueda tomar de los hermanos, se fusiona
+        if (idx != nodo.n) {
+            fusionar(nodo, idx);
+        } else {
+            fusionar(nodo, idx - 1);
+        }
+    }
 }
 
-    public void imprimirNodoEspecifico(ArbolB T, int x) {
-        NodoB temp = new NodoB(orden, null);
+    // Método auxiliar para tomar una clave del hermano anterior
+    private void tomarDeAnterior(NodoB nodo, int idx) {
+        NodoB hijo = nodo.hijos[idx];
+        NodoB hermano = nodo.hijos[idx - 1];
 
-        temp = buscar(T.raiz, x);
-
-        if (temp == null) {
-            System.out.println("Dato no existente");
-        } else {
-            imprimir(temp);
+        // Se desplazan las claves y los hijos en el nodo actual
+        for (int i = hijo.n - 1; i >= 0; --i) {
+            hijo.claves[i + 1] = hijo.claves[i];
         }
+
+        if (!hijo.hoja) {
+            for (int i = hijo.n; i >= 0; --i) {
+                hijo.hijos[i + 1] = hijo.hijos[i];
+            }
+        }
+
+        // Se toma la clave del padre y el último hijo del hermano
+        hijo.claves[0] = nodo.claves[idx - 1];
+
+        if (!hijo.hoja) {
+            hijo.hijos[0] = hermano.hijos[hermano.n];
+        }
+
+        // Se actualiza la clave del padre con la última clave del hermano
+        nodo.claves[idx - 1] = hermano.claves[hermano.n - 1];
+
+        // Se ajustan las cuentas de claves y hijos en los nodos
+        hijo.n++;
+        hermano.n--;
     }
 
-     public void eliminarLlave(ArbolB t, int llave) { //este metodo sirve aqui pones su funcionamiento claro y resumido
-        NodoB temp = new NodoB(orden, null);
-        temp = buscar(t.raiz, llave);
+    // Método auxiliar para tomar una clave del hermano siguiente
+    private void tomarDeSiguiente(NodoB nodo, int idx) {
+        NodoB hijo = nodo.hijos[idx];
+        NodoB hermano = nodo.hijos[idx + 1];
 
-        if (temp != null && temp.esHoja() && temp.getCantidad() > orden - 1) {
-            int i = 0;
+        // Se toma la clave del padre y el primer hijo del hermano
+        hijo.claves[hijo.n] = nodo.claves[idx];
 
-            while (llave > temp.getDato(i)) {
-                i++;
+        if (!hijo.hoja) {
+            hijo.hijos[hijo.n + 1] = hermano.hijos[0];
+        }
+
+        // Se actualiza la clave del padre con la primera clave del hermano
+        nodo.claves[idx] = hermano.claves[0];
+
+        // Se desplazan las claves y los hijos en el hermano
+        for (int i = 1; i < hermano.n; ++i) {
+            hermano.claves[i - 1] = hermano.claves[i];
+        }
+
+        if (!hermano.hoja) {
+            for (int i = 1; i <= hermano.n; ++i) {
+                hermano.hijos[i - 1] = hermano.hijos[i];
             }
-            for (int j = i; j < 2 * orden - 2; j++) {
-                temp.setDato(j, temp.getDato(j + 1));
+        }
+
+        // Se ajustan las cuentas de claves y hijos en los nodos
+        hijo.n++;
+        hermano.n--;
+    }
+
+    // Método auxiliar para fusionar un nodo con su hermano
+    private void fusionar(NodoB nodo, int idx) {
+        NodoB hijo = nodo.hijos[idx];
+        NodoB hermano = nodo.hijos[idx + 1];
+
+        // Se traslada la clave del padre al hijo
+        hijo.claves[t - 1] = nodo.claves[idx];
+
+        // Se copian las claves y los hijos del hermano al hijo
+        for (int i = 0; i < hermano.n; ++i) {
+            hijo.claves[i + t] = hermano.claves[i];
+        }
+
+        if (!hijo.hoja) {
+            for (int i = 0; i <= hermano.n; ++i) {
+                hijo.hijos[i + t] = hermano.hijos[i];
             }
-            temp.setCantidad(temp.getCantidad() - 1);
-        } else {
-            System.out.println("No se puede eliminar el dato. ¡No existe!");
+        }
+
+        // Se desplazan las claves y los hijos en el nodo
+        for (int i = idx + 1; i < nodo.n; ++i) {
+            nodo.claves[i - 1] = nodo.claves[i];
+        }
+
+        for (int i = idx + 2; i <= nodo.n; ++i) {
+            nodo.hijos[i - 1] = nodo.hijos[i];
+        }
+
+        // Se ajustan las cuentas de claves y hijos en los nodos
+        hijo.n += hermano.n + 1;
+        nodo.n--;
+    }
+
+  // Método privado que divide un hijo de un nodo en caso de que esté lleno
+private void dividirHijo(NodoB padre, int idx) {
+    // Crear un nuevo hijo que será la mitad derecha del hijo original
+    NodoB nuevoHijo = new NodoB(t, raiz.hoja);
+    NodoB hijo = padre.hijos[idx]; // Hijo que se va a dividir
+
+    padre.n++; // Incrementar el número de claves en el padre
+
+    // Desplazar los punteros de los hijos en el padre
+    for (int i = padre.n - 1; i > idx; i--) {
+        padre.hijos[i] = padre.hijos[i - 1];
+    }
+
+    // Insertar el nuevo hijo en el lugar correcto
+    padre.hijos[idx + 1] = nuevoHijo;
+
+    // Copiar la mitad derecha de las claves del hijo original al nuevo hijo
+    for (int i = 0; i < hijo.n - t; i++) {
+        nuevoHijo.claves[i] = hijo.claves[i + t];
+    }
+
+    nuevoHijo.n = hijo.n - t; // Actualizar el número de claves en el nuevo hijo
+    hijo.n = t; // Actualizar el número de claves en el hijo original
+
+    // Mover los punteros de los hijos del hijo original al nuevo hijo
+    for (int i = t; i < hijo.n; i++) {
+        nuevoHijo.hijos[i - t] = hijo.hijos[i];
+        hijo.hijos[i] = null; // Establecer los hijos que se han trasladado a null
+    }
+    
+    // Vincular el último hijo de nuevoHijo correctamente
+    nuevoHijo.hijos[nuevoHijo.n] = hijo.hijos[hijo.n];
+    // Establecer el último hijo que se ha trasladado a null
+    hijo.hijos[hijo.n] = null;
+}
+    
+ // Método estático privado que imprime el contenido del árbol recursivamente
+private static void imprimirArbol(NodoB nodo, int nivel) {
+    if (nodo != null) {
+        // Imprimir las claves del nodo en el nivel actual
+        System.out.print("Nivel " + nivel + ": ");
+        for (int i = 0; i < nodo.n; i++) {
+            if (nodo.claves[i] != 0) {
+                System.out.print(nodo.claves[i] + " ");
+            }
+        }
+        System.out.println();
+
+        // Llamar recursivamente a imprimirArbol para los hijos del nodo
+        if (!nodo.hoja) {
+            for (int i = 0; i <= nodo.n; i++) {
+                imprimirArbol(nodo.hijos[i], nivel + 1);
+            }
         }
     }
-      }
+}
+
+// Método público que inicia la impresión del árbol desde la raíz
+public void imprimirArbol() {
+    imprimirArbol(raiz, 0);
+}
+}
+
