@@ -5,12 +5,12 @@ public class Main {
         Scanner leer = new Scanner(System.in);
 
         // Crear un árbol B con un orden de 3
-        ArbolB arbolB = new ArbolB(3);
+        
 
         // Insertar algunas llaves
         System.out.println("Cuantos datos quieres insertar?");
         int cantidadLlaves = leer.nextInt();
-
+        ArbolB arbolB = new ArbolB(4);
         for (int i = 0; i < cantidadLlaves; i++) {
             System.out.println("Ingrese los datos " + i + ":");
             int llave = leer.nextInt();
